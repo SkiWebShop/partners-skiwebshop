@@ -1,0 +1,40 @@
+{
+    "header": {
+        "title": "Let's work together!",
+        "imagelink":"title"
+    },
+    "about_us": {
+        "content": "",
+        "data_columns":  [
+            {
+                "icon": "fa-solid fa-chart-line-up",
+                "name": "Yearly revenue",
+                "data": "12M+"
+            },
+            {
+                "icon": "fa-solid fa-chart-line-up",
+                "name":"Yearly sessions",
+                "data": "4M+"
+            }
+        ]
+    },
+    "sections": [
+        {
+            "title": "Let's work together!",
+            "header_image": "",
+            "data_columns":  [
+                {
+                    "icon": "fa-solid fa-chart-line-up",
+                    "name": "Yearly revenue",
+                    "data": "12M+"
+                },
+                {
+                    "icon": "fa-solid fa-chart-line-up",
+                    "name":"Yearly sessions",
+                    "data": "4M+"
+                }
+            ],
+            "quote": ""
+        }
+    ]
+}

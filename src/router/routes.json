@@ -1,0 +1,13 @@
+[
+    {
+        "path": "/",
+        "name": "Home",
+        "meta": {
+            "authRequired": true
+        }
+    },
+    {
+        "path": "/login",
+        "name": "Login"
+    }
+]
