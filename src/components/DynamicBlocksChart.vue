@@ -16,12 +16,15 @@ const props = defineProps({
     },
     graph_template: {
         type: String
+    },
+    graph_title: {
+        type: String
     }
 })
 
 const chartCanvas = ref(null)
 const createChart = () => {
-    bigChart = chart(chartCanvas.value, props.graph_template, props.graph_data)
+    bigChart = chart(chartCanvas.value, props.graph_template, props.graph_data, props.graph_title)
 }
 
 

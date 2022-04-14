@@ -22,6 +22,7 @@
                 <DynamicBlocksChart
                     :graph_data="block.graph_data"
                     :graph_template="block.chart_type"
+                    :graph_title="block.chart_title"
                     :style="getStyle(block)"
                     v-if="block.template === 'chart'"
                 />

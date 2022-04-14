@@ -31,7 +31,7 @@ const getColors = (color = null) => {
 
 
 
-const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
+const chart = (ctx = HTMLElement , type = String, data = Object, title = String, args = {}) => {
 
     const choices = {
         bar_chart: {
@@ -82,6 +82,7 @@ const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
             },
             options: {
                 indexAxis: 'y',
+                plugins: {},
                 scales: {
                     x: {
                         stacked: true,
@@ -106,7 +107,9 @@ const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
                     data: data.map(el => el.value )
                 }]
             },
-            options: {}
+            options: {
+                plugins: {}
+            }
         }
     }
 
@@ -125,6 +128,20 @@ const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
 
     chartObj['options']['responsive'] = true
     chartObj['options']['maintainAspectRatio'] = false
+    
+    if(title) {
+        chartObj['options']['plugins']['title'] = {
+            position: 'top',
+            display: true,
+            text: title
+        }
+    }
+
+    chartObj['options']['plugins']['legend'] = {
+        position: 'bottom'
+    }
+
+
     console.log(chartObj)
 
     return new Chart(ctx, chartObj)
