@@ -1,5 +1,5 @@
 <template>
-    <header class="px-40 flex gap-6 pt-5">
+    <header class="px-4 md:px-40 flex gap-6 pt-5">
         <router-link v-for="link in links" :to="link.routerLink">{{ link.name }}</router-link>
     </header>
 </template>
@@ -14,12 +14,12 @@ const links = ref([
             name: 'Home'
         }
     },
-    {
-        name: 'About SkiWebShop',
-        routerLink: {
-            path: '/login'
-        }
-    },
+    // {
+    //     name: 'About SkiWebShop',
+    //     routerLink: {
+    //         path: '/login'
+    //     }
+    // },
     {
         name: 'Logout',
         routerLink: {

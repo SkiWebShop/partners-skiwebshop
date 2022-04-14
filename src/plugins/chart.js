@@ -1,29 +1,46 @@
 import axios from 'axios'
 import Chart from 'chart.js/auto'
 
-const getColors = () => {
+const getColors = (color = null) => {
     // axios.get('https://www.colr.org/json/colors/random/20').then(res => {
     //     console.log(JSON.stringify(res.data.colors.map(el => '#' + el.hex)))
     // })
-    return ["#ced8d7","#e7c8b3","#296184","#f5e5dc","#c9e4ee","#3b4349","#d7b1d2","#ffe6c3","#e0e5e7","#c29f9d","#744957","#fffac0","#5d6571","#bdb5bb","#86968b","#dbd9d7","#8db6cf","#c8c6bb","#e4d8d4"]
+    const colors = [
+        'rgb(43, 147, 249)',
+        'rgb(51, 246, 161)',
+        'rgb(25, 210, 225)',
+        'rgb(107, 107, 254)',
+        'rgb(253, 132, 190)',
+        'rgb(253, 91, 110)',
+        'rgb(254, 157, 81)',
+        'rgb(255, 193, 23)',
+        'rgb(255, 243, 28)',
+    ]
 
+    if(color === null) {
+        return colors
+    }
+
+    if( parseInt(color) > colors.length ) {
+        const number = colors.length - parseInt(color)
+        return number
+    } else {
+        return colors[parseInt(color)]
+    }
 }
 
 
 
 const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
-    const colors = getColors()
 
     const choices = {
         bar_chart: {
             type: 'bar',
             data: {
-                labels: data.map(el => {
-                    return el.value
-                }),
+                labels: data.map(el => el.label ),
                 datasets: [{
                     label: 'Verdeling leeftijd',
-                    backgroundColor: colors[2],
+                    backgroundColor: getColors(0),
 
                     data: data.map(el => el.value )
                 }]
@@ -58,7 +75,7 @@ const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
                     return {
                         label: el.label,
                         data: [el.value],
-                        backgroundColor: colors[index],
+                        backgroundColor: getColors(index),
 
                     }
                 })
@@ -77,6 +94,19 @@ const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
                     }
                 }
             }
+        },
+        pie_chart: {
+            type: 'pie',
+            data: {
+                labels: data.map(el => el.label ),
+                datasets: [{
+                    label: 'Verdeling leeftijd',
+                    backgroundColor: getColors(),
+
+                    data: data.map(el => el.value )
+                }]
+            },
+            options: {}
         }
     }
 
@@ -85,11 +115,18 @@ const chart = (ctx = HTMLElement , type = String, data = Object, args = {}) => {
     const chartOptions = choices[type].options
     const chartData = choices[type].data
 
-    return new Chart(ctx, {
+
+    const chartObj = {
         type: chartType,
         data: chartData,
         options: chartOptions,
         ...args
-    })
+    }
+
+    chartObj['options']['responsive'] = true
+    chartObj['options']['maintainAspectRatio'] = false
+    console.log(chartObj)
+
+    return new Chart(ctx, chartObj)
 }
 export { chart, Chart }

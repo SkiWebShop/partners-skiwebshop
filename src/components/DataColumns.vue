@@ -1,6 +1,6 @@
 <template>
-    <div class="flex grow py-10">
-        <div class="text-center grow" v-for="datacol in data">
+    <div class="grid md:grid-flow-col gap-10 auto-cols-auto py-10">
+        <div class="text-center" v-for="datacol in data">
             <div v-if="iconTag(datacol.icon)">
                 <fa-icon :icon="iconTag(datacol.icon)" size="5x" class="text-blue" />
             </div>

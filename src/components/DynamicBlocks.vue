@@ -1,27 +1,28 @@
 <template>
     <div class="py-8">
         <div class="flex flex-wrap" v-if="isFullwidth">
-            <FullWidthBanner :image="allBlocks.image" v-if="allBlocks.template === 'full_width_banner'" />
-            <DynamicBlocksCTA 
-                    :cta="allBlocks"
-                    v-if="allBlocks.template === 'cta'"
-                />
+            <FullWidthBanner
+                :image="allBlocks.image"
+                v-if="allBlocks.template === 'full_width_banner'"
+            />
+            <DynamicBlocksCTA :cta="allBlocks" v-if="allBlocks.template === 'cta'" />
         </div>
-        <div v-else class="grid grid-cols-2 gap-5">
-            <div v-for="block in allBlocks" class="grow">
+        <div v-else class="grid md:grid-cols-2 gap-5">
+            <div v-for="block in allBlocks" class="grow" :class="extraClass(block)">
                 <DynamicBlocksImageText
                     :image="block.image"
                     v-if="block.template === 'image_text_block'"
-                >{{block.overlay_text}}</DynamicBlocksImageText>
+                >{{ block.overlay_text }}</DynamicBlocksImageText>
 
                 <DynamicBlocksContactCard
                     :contact="block"
                     v-if="block.template === 'contact_card'"
                 />
 
-                <DynamicBlocksChart 
+                <DynamicBlocksChart
                     :graph_data="block.graph_data"
                     :graph_template="block.chart_type"
+                    :style="getStyle(block)"
                     v-if="block.template === 'chart'"
                 />
             </div>
@@ -55,9 +56,33 @@ const allBlocks = computed(() => {
     }
 })
 
+const extraClass = (block) => {
+    const classes = []
+    if (block.chart_type) {
+        if (block.chart_style === "chart_fullwidth") {
+            classes.push('col-span-full')
+        }
+    }
+
+    return classes
+
+}
+
+const getStyle = (block) => {
+    if(block.chart_style === 'chart_fullwidth') {
+        return {
+            heigth: '300px'
+        }    
+    } else {
+        return {
+            height: '400px'
+        }
+    }
+}
+
 const isFullwidth = computed(() => {
     try {
-        return ( 
+        return (
             props.blocks[0].dynamic_blocks_id.template === 'full_width_banner' ||
             props.blocks[0].dynamic_blocks_id.template === 'cta'
         )

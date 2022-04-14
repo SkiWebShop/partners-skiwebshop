@@ -1,6 +1,6 @@
 <template>
-    <div class="relative h-96 flex items-center justify-center bg-blue bg-opacity-20">
-        <img :src="imageLink" class="absolute h-full w-full object-cover -z-10 pointer-events-none " />
+    <div class="relative aspect-video flex items-center justify-center bg-blue bg-opacity-20">
+        <img :src="imageLink" class="absolute w-full object-cover -z-10 aspect-video pointer-events-none " />
         <p class="text-white text-3xl font-bold text-center drop-shadow-lg px-3 ">
             <slot></slot>
         </p>

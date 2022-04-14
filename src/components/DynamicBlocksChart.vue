@@ -1,7 +1,6 @@
 <template>
-    <div>
+    <div class="relative" >
         <canvas ref="chartCanvas" :key="graph_data"></canvas>
-        <canvas ref="chartCanvass" :key="graph_data"></canvas>
     </div>
 </template>
 
@@ -21,7 +20,6 @@ const props = defineProps({
 })
 
 const chartCanvas = ref(null)
-const chartCanvass = ref(null)
 const createChart = () => {
     bigChart = chart(chartCanvas.value, props.graph_template, props.graph_data)
 }

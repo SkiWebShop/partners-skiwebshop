@@ -1,9 +1,9 @@
 <template>
-    <div class="bg-white flex px-12 py-16 gap-10 items-center">
-        <div class="w-[250px] h-[250px]">
-            <img :src="imageLink" class="h-full w-full object-cover object-top rounded-full" />
+    <div class="bg-white md:flex px-12 py-11 gap-10 items-center">
+        <div class="w-full h-auto md:w-[250px] md:h-[250px]">
+            <img :src="imageLink" class="h-full w-full aspect-square object-cover object-top rounded-full" />
         </div>
-        <div class="grow text-lg">
+        <div class="grow text-lg text-left mt-11 md:mt-0">
             <h3 class="font-bold text-main text-xl" >{{contact.name}}</h3>
             <h4>{{contact.title}}</h4>
             <p class="mt-2">
