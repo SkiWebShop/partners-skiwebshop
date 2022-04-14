@@ -1,48 +1,90 @@
 import axios from 'axios'
 import Chart from 'chart.js/auto'
 
-const getColors = (color = null) => {
+const getColors = (color = null, alpha = 1) => {
     // axios.get('https://www.colr.org/json/colors/random/20').then(res => {
     //     console.log(JSON.stringify(res.data.colors.map(el => '#' + el.hex)))
     // })
-    const colors = [
-        'rgb(43, 147, 249)',
-        'rgb(51, 246, 161)',
-        'rgb(25, 210, 225)',
-        'rgb(107, 107, 254)',
-        'rgb(253, 132, 190)',
-        'rgb(253, 91, 110)',
-        'rgb(254, 157, 81)',
-        'rgb(255, 193, 23)',
-        'rgb(255, 243, 28)',
+    const colors = [{
+            red: 43,
+            green: 147,
+            blue: 249,
+        },
+        {
+            red: 51,
+            green: 246,
+            blue: 161,
+        },
+        {
+            red: 25,
+            green: 210,
+            blue: 225,
+        },
+        {
+            red: 107,
+            green: 107,
+            blue: 254,
+        },
+        {
+            red: 253,
+            green: 132,
+            blue: 190,
+        },
+        {
+            red: 253,
+            green: 91,
+            blue: 110,
+        },
+        {
+            red: 254,
+            green: 157,
+            blue: 81,
+        },
+        {
+            red: 255,
+            green: 193,
+            blue: 23,
+        },
+        {
+            red: 255,
+            green: 243,
+            blue: 28,
+        }
     ]
 
-    if(color === null) {
-        return colors
+    const getColor = (color = Object) => {
+        return `rgba(${Object.values(color).join(',')}, ${alpha})`
     }
 
-    if( parseInt(color) > colors.length ) {
+    if (color === null) {
+        const newColors = colors.map(el => getColor(el))
+        console.log(newColors)
+        return newColors
+    }
+
+
+    if (parseInt(color) > colors.length) {
         const number = colors.length - parseInt(color)
         return number
     } else {
-        return colors[parseInt(color)]
+        return getColor(colors[parseInt(color)])
     }
 }
 
 
 
-const chart = (ctx = HTMLElement , type = String, data = Object, title = String, args = {}) => {
+const chart = (ctx = HTMLElement, type = String, data = Object, title = String, args = {}) => {
 
     const choices = {
         bar_chart: {
             type: 'bar',
             data: {
-                labels: data.map(el => el.label ),
+                labels: data.map(el => el.label),
                 datasets: [{
                     label: 'Verdeling leeftijd',
                     backgroundColor: getColors(0),
 
-                    data: data.map(el => el.value )
+                    data: data.map(el => el.value)
                 }]
             },
             options: {
@@ -50,7 +92,7 @@ const chart = (ctx = HTMLElement , type = String, data = Object, title = String,
                     y: {
                         ticks: {
                             // For a category axis, the val is the index so the lookup via getLabelForValue is needed
-                            callback: function (val, index) {
+                            callback: function(val, index) {
                                 return `${val * 100}%`
                             }
                         }
@@ -87,7 +129,7 @@ const chart = (ctx = HTMLElement , type = String, data = Object, title = String,
                     x: {
                         stacked: true,
                         display: false,
-                        
+
                     },
                     y: {
                         stacked: true,
@@ -99,12 +141,12 @@ const chart = (ctx = HTMLElement , type = String, data = Object, title = String,
         pie_chart: {
             type: 'pie',
             data: {
-                labels: data.map(el => el.label ),
+                labels: data.map(el => el.label),
                 datasets: [{
                     label: 'Verdeling leeftijd',
                     backgroundColor: getColors(),
-
-                    data: data.map(el => el.value )
+                    borderColor: getColors(null, 0.1),
+                    data: data.map(el => el.value)
                 }]
             },
             options: {
@@ -113,7 +155,7 @@ const chart = (ctx = HTMLElement , type = String, data = Object, title = String,
         }
     }
 
-    
+
     const chartType = choices[type].type
     const chartOptions = choices[type].options
     const chartData = choices[type].data
@@ -128,8 +170,8 @@ const chart = (ctx = HTMLElement , type = String, data = Object, title = String,
 
     chartObj['options']['responsive'] = true
     chartObj['options']['maintainAspectRatio'] = false
-    
-    if(title) {
+
+    if (title) {
         chartObj['options']['plugins']['title'] = {
             position: 'top',
             display: true,
