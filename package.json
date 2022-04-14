@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "nodemon server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -15,12 +16,14 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "axios": "^0.26.1",
     "chart.js": "^3.7.1",
+    "express": "^4.17.3",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.0",
     "autoprefixer": "^10.4.4",
+    "nodemon": "^2.0.15",
     "pinia": "^2.0.13",
     "pinia-plugin-persistedstate": "^1.5.1",
     "postcss": "^8.4.12",
