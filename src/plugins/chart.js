@@ -58,7 +58,6 @@ const getColors = (color = null, alpha = 1) => {
 
     if (color === null) {
         const newColors = colors.map(el => getColor(el))
-        console.log(newColors)
         return newColors
     }
 
@@ -73,7 +72,7 @@ const getColors = (color = null, alpha = 1) => {
 
 
 
-const chart = (ctx = HTMLElement, type = String, data = Object, title = String, args = {}) => {
+const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { chart_title: String, chart_label: String, chart_datatype: String }, args = {}) => {
 
     const choices = {
         bar_chart: {
@@ -81,38 +80,17 @@ const chart = (ctx = HTMLElement, type = String, data = Object, title = String, 
             data: {
                 labels: data.map(el => el.label),
                 datasets: [{
-                    label: 'Verdeling leeftijd',
+                    label: chartArgs.chart_label,
                     backgroundColor: getColors(0),
 
                     data: data.map(el => el.value)
                 }]
             },
-            options: {
-                scales: {
-                    y: {
-                        ticks: {
-                            // For a category axis, the val is the index so the lookup via getLabelForValue is needed
-                            callback: function(val, index) {
-                                return `${val * 100}%`
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: (val) => {
-                                return `${Math.round(val.raw * 10000) / 100}%`
-                            }
-                        }
-                    }
-                }
-            }
         },
         stacked_bar_chart: {
             type: 'bar',
             data: {
-                labels: ['alle'],
+                labels: [chartArgs.chart_label],
                 datasets: data.map((el, index) => {
                     return {
                         label: el.label,
@@ -124,7 +102,6 @@ const chart = (ctx = HTMLElement, type = String, data = Object, title = String, 
             },
             options: {
                 indexAxis: 'y',
-                plugins: {},
                 scales: {
                     x: {
                         stacked: true,
@@ -148,9 +125,6 @@ const chart = (ctx = HTMLElement, type = String, data = Object, title = String, 
                     borderColor: getColors(null, 0.1),
                     data: data.map(el => el.value)
                 }]
-            },
-            options: {
-                plugins: {}
             }
         }
     }
@@ -164,27 +138,61 @@ const chart = (ctx = HTMLElement, type = String, data = Object, title = String, 
     const chartObj = {
         type: chartType,
         data: chartData,
-        options: chartOptions,
+        options: {
+            plugins: {},
+            scales: {},
+            ...chartOptions
+        },
         ...args
     }
 
-    chartObj['options']['responsive'] = true
     chartObj['options']['maintainAspectRatio'] = false
 
-    if (title) {
+    const assign = (obj, keyPath, value) => {
+        let lastKeyIndex = keyPath.length - 1;
+        for (var i = 0; i < lastKeyIndex; ++i) {
+            let key = keyPath[i];
+            if (!(key in obj)) {
+                obj[key] = {}
+            }
+            obj = obj[key];
+        }
+        obj[keyPath[lastKeyIndex]] = value;
+    }
+
+    if (chartArgs.chart_title) {
         chartObj['options']['plugins']['title'] = {
             position: 'top',
             display: true,
-            text: title
+            text: chartArgs.chart_title
         }
     }
+
+    const datatypes = {
+        percentage: {
+            properties: (type) => {
+                if(!['pie_chart', 'stacked_bar_chart'].includes(type)){
+                    assign(chartObj, ['options', 'scales', 'y', 'ticks'], {
+                        callback: (val, index) => `${val * 100}%`
+                    });
+                }
+                
+                assign(chartObj, ['options','plugins', 'tooltip', 'callbacks', 'label'] , (val) => {
+                    return`${val.dataset.label}: ${Math.round(val.raw * 1000000) / 10000}%`
+                })
+            },
+        }
+    }
+
+    if (chartArgs.chart_datatype && chartArgs.chart_datatype in datatypes) {
+            datatypes[chartArgs.chart_datatype].properties(type)
+    }
+
 
     chartObj['options']['plugins']['legend'] = {
         position: 'bottom'
     }
 
-
-    console.log(chartObj)
 
     return new Chart(ctx, chartObj)
 }
