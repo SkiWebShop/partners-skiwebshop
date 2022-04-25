@@ -74,6 +74,12 @@ const extraClass = (block) => {
 }
 
 const getStyle = (block) => {
+    if(block.chart_type === 'world_map') {
+        return {
+            height: '500px'
+        }
+    }
+
     if(block.chart_style === 'chart_fullwidth') {
         return {
             heigth: '300px'

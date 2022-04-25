@@ -1,5 +1,9 @@
 import axios from 'axios'
 import Chart from 'chart.js/auto'
+import worldmapjson from './worldmap.json'
+import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from 'chartjs-chart-geo';
+Chart.register(ChoroplethController, GeoFeature, ColorScale, ProjectionScale);
+import * as ChartGeo from 'chartjs-chart-geo'
 
 const getColors = (color = null, alpha = 1) => {
     // axios.get('https://www.colr.org/json/colors/random/20').then(res => {
@@ -70,9 +74,21 @@ const getColors = (color = null, alpha = 1) => {
     }
 }
 
-
+const assign = (obj, keyPath, value) => {
+    let lastKeyIndex = keyPath.length - 1;
+    for (var i = 0; i < lastKeyIndex; ++i) {
+        let key = keyPath[i];
+        if (!(key in obj)) {
+            obj[key] = {}
+        }
+        obj = obj[key];
+    }
+    obj[keyPath[lastKeyIndex]] = value;
+}
 
 const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { chart_title: String, chart_label: String, chart_datatype: String }, args = {}) => {
+
+    const countries = ChartGeo.topojson.feature(worldmapjson, worldmapjson.objects.countries).features;
 
     const choices = {
         bar_chart: {
@@ -105,11 +121,13 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
                 scales: {
                     x: {
                         stacked: true,
+                        max: 1,
                         display: false,
 
                     },
                     y: {
                         stacked: true,
+                        max: 1,
                         display: false,
                     }
                 }
@@ -126,9 +144,46 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
                     data: data.map(el => el.value)
                 }]
             }
+        },
+        world_map: {
+            type: 'choropleth',
+            data: {
+                labels: countries.map(country => country.properties.name),
+                datasets: [{
+                    label: 'Countries',
+                    data: countries.map(country => {
+                        let countryvalue = data.filter(item => country.properties.name === item.label )
+                        if(countryvalue.length > 0) {
+                            return {
+                                feature: country,
+                                value: 1
+                            }
+                        } else {
+                            return {
+                                feature: country,
+                                value: 0
+                            }
+                        }
+                    }),
+                }]
+            },
+            options: {
+                showOutline: true,
+                showGraticule: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    xy: {
+                        projection: 'equalEarth',
+                        display: false,
+                    }
+                }
+            }
         }
     }
-
 
     const chartType = choices[type].type
     const chartOptions = choices[type].options
@@ -148,17 +203,7 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
 
     chartObj['options']['maintainAspectRatio'] = false
 
-    const assign = (obj, keyPath, value) => {
-        let lastKeyIndex = keyPath.length - 1;
-        for (var i = 0; i < lastKeyIndex; ++i) {
-            let key = keyPath[i];
-            if (!(key in obj)) {
-                obj[key] = {}
-            }
-            obj = obj[key];
-        }
-        obj[keyPath[lastKeyIndex]] = value;
-    }
+
 
     if (chartArgs.chart_title) {
         chartObj['options']['plugins']['title'] = {
@@ -171,21 +216,21 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
     const datatypes = {
         percentage: {
             properties: (type) => {
-                if(!['pie_chart', 'stacked_bar_chart'].includes(type)){
+                if (!['pie_chart', 'stacked_bar_chart'].includes(type)) {
                     assign(chartObj, ['options', 'scales', 'y', 'ticks'], {
-                        callback: (val, index) => `${val * 100}%`
+                        callback: (val, index) => `${Math.round(val * 1000000) / 10000}%`
                     });
                 }
-                
-                assign(chartObj, ['options','plugins', 'tooltip', 'callbacks', 'label'] , (val) => {
-                    return`${val.dataset.label}: ${Math.round(val.raw * 1000000) / 10000}%`
+
+                assign(chartObj, ['options', 'plugins', 'tooltip', 'callbacks', 'label'], (val) => {
+                    return `${val.dataset.label}: ${Math.round(val.raw * 1000000) / 10000}%`
                 })
             },
         }
     }
 
     if (chartArgs.chart_datatype && chartArgs.chart_datatype in datatypes) {
-            datatypes[chartArgs.chart_datatype].properties(type)
+        datatypes[chartArgs.chart_datatype].properties(type)
     }
 
 
