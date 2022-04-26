@@ -158,10 +158,11 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
                             if (value > 0) {
                                 return getColors(0)
                             } else {
-                                return 'rgba(255,255,255, 1)'
+                                return 'rgba(255,255,255, 0.6)'
                             }
                         }
                     },
+                    graticuleBorderColor: 'rgba(0,0,0,0.03)',
                     label: 'Countries',
                     data: countries.map(country => {
                         let countryvalue = data.filter(item => country.properties.name === item.label)
