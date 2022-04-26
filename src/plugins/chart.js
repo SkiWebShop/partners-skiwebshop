@@ -158,7 +158,7 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
                             if (value > 0) {
                                 return getColors(0)
                             } else {
-                                return 'rgba(255,255,255, 0.7)'
+                                return 'rgba(255,255,255, 1)'
                             }
                         }
                     },
