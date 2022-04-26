@@ -90,6 +90,8 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
 
     const countries = ChartGeo.topojson.feature(worldmapjson, worldmapjson.objects.countries).features;
 
+
+
     const choices = {
         bar_chart: {
             type: 'bar',
@@ -150,10 +152,20 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
             data: {
                 labels: countries.map(country => country.properties.name),
                 datasets: [{
+                    backgroundColor: (context) => {
+                        if ('raw' in context &&  'value' in context.raw) {
+                            const value = context.raw.value
+                            if (value > 0) {
+                                return getColors(0)
+                            } else {
+                                return 'rgba(255,255,255, 0.7)'
+                            }
+                        }
+                    },
                     label: 'Countries',
                     data: countries.map(country => {
-                        let countryvalue = data.filter(item => country.properties.name === item.label )
-                        if(countryvalue.length > 0) {
+                        let countryvalue = data.filter(item => country.properties.name === item.label)
+                        if (countryvalue.length > 0) {
                             return {
                                 feature: country,
                                 value: 1
@@ -176,6 +188,9 @@ const chart = (ctx = HTMLElement, type = String, data = Object, chartArgs = { ch
                     },
                 },
                 scales: {
+                    color: {
+                        display: false
+                    },
                     xy: {
                         projection: 'equalEarth',
                         display: false,
