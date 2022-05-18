@@ -19,3 +19,18 @@ const showHeader = computed(() => {
 })
 
 </script>
+
+<style lang="postcss">
+.content-section ul li {
+    @apply my-1 before:content-['✓'] before:font-bold before:mr-2 text-2xl;
+}
+.content-section ul {
+    @apply my-10;
+}
+.content-section p {
+    @apply my-3;
+}
+body {
+    @apply bg-[#EFEFEF];
+}
+</style>

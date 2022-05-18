@@ -9,5 +9,17 @@
     {
         "path": "/login",
         "name": "Login"
+    },
+    {
+        "path": "/report",
+        "name": "ReportsCollection"
+    },
+    {
+        "path": "/report/:slug",
+        "name": "Report"
+    },
+    {
+        "path": "/packages",
+        "name": "Packages"
     }
 ]

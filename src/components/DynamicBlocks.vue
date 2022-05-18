@@ -6,6 +6,7 @@
                 v-if="allBlocks.template === 'full_width_banner'"
             />
             <DynamicBlocksCTA :cta="allBlocks" v-if="allBlocks.template === 'cta'" />
+            <DynamicBlocksPackageBanner v-if="allBlocks.template === 'package_banner'" :blocks="blocks"  />
         </div>
         <div v-else class="grid md:grid-cols-2 gap-5">
             <div v-for="block in allBlocks" class="grow" :class="extraClass(block)">
@@ -42,6 +43,7 @@ import DynamicBlocksImageText from './DynamicBlocksImageText.vue';
 import DynamicBlocksContactCard from './DynamicBlocksContactCard.vue';
 import DynamicBlocksCTA from './DynamicBlocksCTA.vue';
 import DynamicBlocksChart from './DynamicBlocksChart.vue';
+import DynamicBlocksPackageBanner from './DynamicBlocksPackageBanner.vue';
 
 const props = defineProps({
     blocks: {
@@ -95,7 +97,8 @@ const isFullwidth = computed(() => {
     try {
         return (
             props.blocks[0].dynamic_blocks_id.template === 'full_width_banner' ||
-            props.blocks[0].dynamic_blocks_id.template === 'cta'
+            props.blocks[0].dynamic_blocks_id.template === 'cta' ||
+            props.blocks[0].dynamic_blocks_id.template === 'package_banner'
         )
     } catch (error) {
         return false

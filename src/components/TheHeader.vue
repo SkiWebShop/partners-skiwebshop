@@ -21,6 +21,12 @@ const links = ref([
     //     }
     // },
     {
+        name: 'Report',
+        routerLink: {
+            name: 'ReportsCollection'
+        }
+    },
+    {
         name: 'Logout',
         routerLink: {
             name: 'Login',
@@ -28,7 +34,14 @@ const links = ref([
                 logout: true
             }
         }
+    },
+    {
+        name: "Packages",
+        routerLink: {
+            name: "Packages"
+        }
     }
+    
 ])
 
 </script>
