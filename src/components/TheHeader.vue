@@ -27,18 +27,18 @@ const links = ref([
         }
     },
     {
+        name: "Packages",
+        routerLink: {
+            name: "Packages"
+        }
+    },
+     {
         name: 'Logout',
         routerLink: {
             name: 'Login',
             query: {
                 logout: true
             }
-        }
-    },
-    {
-        name: "Packages",
-        routerLink: {
-            name: "Packages"
         }
     }
     
@@ -48,6 +48,6 @@ const links = ref([
 
 <style lang="postcss">
 .router-link-active {
-    @apply underline;
+    @apply underline  text-orange;
 }
 </style>
